@@ -5,7 +5,7 @@ This is a quick hack to convert textile markup to hiccup. Currently only *strong
 ## Usage
 
     (parse "foo *bar* baz")
-    ("foo " [:strong] " baz)
+    ("foo " [:strong "bar"] " baz)
 
 ## License
 
