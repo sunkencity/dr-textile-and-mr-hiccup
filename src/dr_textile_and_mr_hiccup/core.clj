@@ -1,6 +1,6 @@
 (ns dr-textile-and-mr-hiccup.core)
 
-(declare parse)
+(declare textile->hiccup)
 
 (defmulti tag :tag)
 (defmethod tag :a [t]
@@ -11,7 +11,7 @@
   (let [href (.group (:m t) 2)]
     [:img {:href href}]))
 (defmethod tag :default [t] 
-  (into [(:tag t)] (parse (:inner t))))
+  (into [(:tag t)] (textile->hiccup (:inner t))))
 
 (def tags
   [{:tag :strong :rexp #"\*(.+?)\*"}
@@ -40,15 +40,15 @@
     (if-not (empty? hits)
       (apply min-key #(:offset %) hits))))
         
-(defn parse
+(defn textile->hiccup
   "Converts source string to hiccup"
   ([string]
-   (parse string []))
+   (textile->hiccup string []))
   ([string data] 
      (let [token-match (next-match string)]
        (if token-match 
-         (parse (:after token-match) (conj data (:before token-match)) token-match)
+         (textile->hiccup (:after token-match) (conj data (:before token-match)) token-match)
        (apply list (conj data string)))))
   ([string data token-match]
-   (parse string (conj data (tag token-match)))))
+   (textile->hiccup string (conj data (tag token-match)))))
                        
